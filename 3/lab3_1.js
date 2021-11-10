@@ -36,18 +36,3 @@ const hackMultiplier = (arrayOfPrevious, n) => {
     const response = await makeABet(GAME_MOD.LCG, ACCOUNT_ID, 500, predicted);
     console.log(response)
 })()
-
-// const s0 = getRandom();
-// const s1 = getRandom();
-// const s2 = getRandom();
-// const s3 = getRandom();
-// const n = hackModulo()
-// const m = hackMultiplier([s0, s1, s2, s3], n);
-// console.log(m);
-// const c = hackIncrement([s0, s1], m, n);
-// console.log(c);
-// const predictedS4 = predictRandomNumber(s3, m, n, c);
-// const s4 = getRandom();
-//
-//
-// console.log(predictedS4 === s4);
