@@ -22,7 +22,7 @@ class MersenneTwister {
 
     initializeGenerator() {
         this.MT[0] = this.seed;
-        for (let i = 1; 624 > i; ++i) { // loop over each other element
+        for (let i = 1; 624 > i; ++i) {
             this.MT[i] = (0x6c078965 * (this.MT[i - 1] ^ (this.MT[i] >> 30)) + i) & 0xffffffff;
         }
     }
