@@ -16,7 +16,7 @@ const makeABet = (mode, id = ACCOUNT_ID, bet, number) => {
     }).then(response => {
         return response.data;
     }).catch(e => {
-        console.log(e.response.data.errors)
+        console.log(e.response.data)
     });
 }
 

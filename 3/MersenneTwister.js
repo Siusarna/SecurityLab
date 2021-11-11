@@ -1,57 +1,63 @@
 'use strict';
 
 class MersenneTwister {
+    w = BigInt(32);
+    n = BigInt(624);
+    m = BigInt(397);
+    r = BigInt(31);
+    a = BigInt(0x9908B0DF);
+    u = BigInt(11);
+    d = BigInt(0xFFFFFFFF);
+    s = BigInt(7);
+    b = BigInt(0x9D2C5680);
+    t = BigInt(15);
+    c = BigInt(0xEFC60000);
+    l = BigInt(18);
+    f = BigInt(1812433253);
+    bigOne = BigInt(1);
+    lowerMask = (this.bigOne << this.r) - this.bigOne;
+    upperMask = this.bigOne << this.r;
+
     MT = [];
     index = 0;
-    init = false;
-    seed;
 
     constructor(seed) {
-        this.seed = seed;
+        this.MT[0] = BigInt(seed);
+        this.index = this.n;
+        for (let i = 1; i < this.n; i++) {
+            this.MT[i] = (this.f * (this.MT[i - 1] ^ (this.MT[i - 1] >> (this.w - BigInt(2)))) + BigInt(i)) & ((this.bigOne << this.w) - this.bigOne);
+        }
     }
 
-    generateNumbers() {
-        for (let i = 0; 624 > i; ++i) {
-            let y = (this.MT[i] & 0x80000000) | (this.MT[(i+1) % 624] & 0x7fffffff);
-            this.MT[i] = this.MT[(i + 397) % 624] ^ (y >> 1);
-            if (y % 2 === 1) {
-                this.MT[i] ^= 0x9908b0df;
+    twist() {
+        for (let i = 0; i < this.n; i++) {
+            // let x = (this.MT[i] & this.upperMask) | (this.MT[(i+1) % 624] & 0x7fffffff);
+            let x = (this.MT[i] & this.upperMask) + (this.MT[BigInt(i + 1) % this.n] & this.lowerMask);
+            let xA = x >> this.bigOne;
+            if (x % BigInt(2) !== BigInt(0)) {
+                xA = xA ^ this.a;
             }
+            this.MT[i] = this.MT[(BigInt(i) + this.m) % this.n] ^ xA;
         }
-    }
-
-    initializeGenerator() {
-        this.MT[0] = this.seed;
-        for (let i = 1; 624 > i; ++i) {
-            this.MT[i] = (0x6c078965 * (this.MT[i - 1] ^ (this.MT[i] >> 30)) + i) & 0xffffffff;
-        }
+        this.index = 0;
     }
 
     extractNumber() {
-        if (this.index === 0) {
-            if (!this.init) {
-                this.initializeGenerator();
+        if (this.index >= this.n) {
+            if (this.index > this.n) {
+                throw new Error('Generator was never seeded');
             }
-            this.generateNumbers();
+            this.twist();
         }
 
         let y = this.MT[this.index];
-        y ^= (y >> 11);
-        y ^= (y <<  7) & 0x9d2c5680;
-        y ^= (y << 15) & 0xefc60000;
-        y ^= (y >> 18);
-        this.index = (this.index + 1) % 624;
-        return y / 0x80000000;
-    }
+        y = y ^ ((y >> this.u) & this.d);
+        y = y ^ ((y << this.s) & this.b);
+        y = y ^ ((y << this.t) & this.c);
+        y = y ^ (y >> this.l);
 
-    randomMT (ubound, flr) {
-        let rnd = this.extractNumber();
-
-        if (ubound !== undefined) {
-            rnd *= ubound;
-        }
-
-        return flr ? ~~rnd : rnd;
+        this.index++;
+        return y & ((this.bigOne << this.w) - this.bigOne);
     }
 }
 
