@@ -13,6 +13,7 @@
     "body-parser": "^1.19.0",
     "celebrate": "^15.0.0",
     "express": "^4.17.1",
+    "express-rate-limit": "^5.5.1",
     "humps": "^2.0.1",
     "knex": "^0.95.14",
     "pg": "^8.7.1"
