@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 
 const config = require('./config');
 const routes = require('./routes');
-const errorHandler = require('./middleware/error-handler');
+const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 app.use(bodyParser.json({ limit: '5mb' }));
