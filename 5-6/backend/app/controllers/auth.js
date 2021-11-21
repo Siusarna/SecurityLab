@@ -10,7 +10,7 @@ const signIn = async (req, res) => {
 };
 
 const signUp = async (req, res) => {
-    const response = await handlers.signIn(req.body);
+    const response = await handlers.signUp(req.body);
     res.status(200).send({
         ...response
     })

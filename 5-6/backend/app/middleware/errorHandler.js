@@ -14,7 +14,7 @@ exports.notFound = (req, res) => {
 exports.validation = (err, req, res, next) => {
     let isValidationError = false;
     let details = {};
-    err.details.forEach(el => {
+    err.details?.forEach(el => {
         if (el.name === 'ValidationError') {
             details = el.details;
             isValidationError = true;
