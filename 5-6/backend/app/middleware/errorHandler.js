@@ -5,23 +5,31 @@ const DEFAULT_ERROR_TYPE = 'Error';
 const DEFAULT_ERROR_TITLE = 'System Error';
 const DEFAULT_ERROR_DESCRIPTION = DEFAULT_ERROR_TITLE;
 
-exports.notFound = () => (req, res) => {
+exports.notFound = (req, res) => {
     res.status(404);
     console.error(`Unknown URL ${req.url}`);
     return res.send({ error: 'Unknown URL' });
 };
 
-exports.validation = () => (err, req, res, next) => {
-    if (err.name !== 'ValidationError') {
+exports.validation = (err, req, res, next) => {
+    let isValidationError = false;
+    let details = {};
+    err.details.forEach(el => {
+        if (el.name === 'ValidationError') {
+            details = el.details;
+            isValidationError = true;
+        }
+    })
+    if (!isValidationError) {
         return next(err);
     }
 
     res.status(422);
     console.error({ err, message: 'ValidationError' });
-    return res.send({ error: err.details });
+    return res.send({ error: details });
 };
 
-exports.unexpected = config => (err, req, res, next) => {
+exports.unexpected = (err, req, res, next) => {
     if (res.headersSent) {
         return next(err);
     }
