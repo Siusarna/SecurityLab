@@ -8,12 +8,13 @@ const userModels = require('../models/users');
 const { knex } = require('../lib/db');
 
 const signIn = async ({ email, password }) => {
-   const { iv, password: storedPassword, ...user } = await knex.transaction(trx => {
+   const storedUser = await knex.transaction(trx => {
       return userModels.selectByEmail(trx, { email })
    });
-   if (!user) {
+   if (!storedUser) {
       throw new BadRequest('Login failed; Invalid email or password.');
    }
+   const { iv, password: storedPassword, ...user } = storedUser;
    const arrIv = new Uint8Array(iv.split(','));
    const decryptedPassword = await decrypt(storedPassword, config.cipherKey, arrIv);
    if (!(await argon2.verify(decryptedPassword, password))) {
