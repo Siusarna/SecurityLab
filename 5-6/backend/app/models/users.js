@@ -19,7 +19,8 @@ const table = 'users';
 
 const createSchema = Joi.object({
     email: Joi.string().lowercase().required(),
-    password: Joi.string().required()
+    password: Joi.string().required(),
+    iv: Joi.string().required(),
 });
 
 const create = async (trx, data) => {
@@ -38,6 +39,15 @@ const create = async (trx, data) => {
     return humps.camelizeKeys(results[0]);
 }
 
+const selectByEmail = async (trx, data) => {
+    const results = await trx
+        .select(['id', 'email', 'password', 'iv', 'created_at'])
+        .from(table)
+        .where({ email: data.email })
+    return humps.camelizeKeys(results[0]);
+}
+
 module.exports = {
-    create
+    create,
+    selectByEmail
 }

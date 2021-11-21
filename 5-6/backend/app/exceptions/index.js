@@ -28,7 +28,14 @@ class DatabaseSaveError extends BaseError {
     }
 }
 
+class BadRequest extends BaseError {
+    constructor(message, status = 400, details = {}) {
+        super(message, status, details);
+    }
+}
+
 module.exports = {
     DatabaseValidationError,
-    DatabaseSaveError
+    DatabaseSaveError,
+    BadRequest
 }
