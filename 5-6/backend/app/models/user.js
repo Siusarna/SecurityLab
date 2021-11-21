@@ -8,7 +8,7 @@ const validateSchema = (schema, data) => {
     if (Array.isArray(data)) {
         data.forEach(obj => validateSchema(schema, obj));
     }
-    const v = Joi.validate(data, schema);
+    const v = schema.validate(data);
     if (v.error) {
         const errors = v.error.details.map(err => err.message);
         throw new DatabaseValidationError(errors.join(', '));
@@ -17,11 +17,10 @@ const validateSchema = (schema, data) => {
 
 const table = 'users';
 
-const createSchema = {
+const createSchema = Joi.object({
     email: Joi.string().lowercase().required(),
-    password: Joi.string().required(),
-    salt: Joi.string().required()
-}
+    password: Joi.string().required()
+});
 
 const create = async (trx, data) => {
     validateSchema(createSchema, data);
