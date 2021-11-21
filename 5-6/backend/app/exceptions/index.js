@@ -17,11 +17,18 @@ class BaseError extends Error {
 }
 
 class DatabaseValidationError extends BaseError {
-    constructor(message, status = 400, details = {}) {
+    constructor(message, status = 422, details = {}) {
+        super(message, status, details);
+    }
+}
+
+class DatabaseSaveError extends BaseError {
+    constructor(message, status = 422, details = {}) {
         super(message, status, details);
     }
 }
 
 module.exports = {
-    DatabaseValidationError
+    DatabaseValidationError,
+    DatabaseSaveError
 }

@@ -1,7 +1,7 @@
 'use strict';
 
 const { Joi } = require('celebrate');
-const { DatabaseValidationError } = require('../exceptions/index');
+const { DatabaseValidationError, DatabaseSaveError } = require('../exceptions/index');
 const humps = require('humps');
 
 const validateSchema = (schema, data) => {
@@ -27,7 +27,14 @@ const create = async (trx, data) => {
     const results = await trx
         .insert(humps.decamelizeKeys(data))
         .into(table)
-        .returning('*');
+        .returning('*')
+        .catch(e => {
+            if (e.constraint === 'users_email_key') {
+                const { password, ...rest } = data;
+                throw new DatabaseSaveError('User with this email has already exists', 422, rest);
+            }
+            throw e;
+        });
     return humps.camelizeKeys(results[0]);
 }
 

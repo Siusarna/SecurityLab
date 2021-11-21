@@ -3,7 +3,7 @@
 const argon2 = require('argon2');
 const { encrypt } = require('../utils/crypto');
 const config = require('../config');
-const userModels = require('../models/user');
+const userModels = require('../models/users');
 const { knex } = require('../lib/db');
 
 const signIn = () => {
@@ -18,9 +18,11 @@ const signUp = async ({ email, password }) => {
       hashLength: 50,
    });
    const encryptedPassword = await encrypt(hashedPassword, config.cipherKey);
-   return knex.transaction(trx => {
+   const { password: storedPassword, ...rest } = await knex.transaction(trx => {
       return userModels.create(trx, {email, password: encryptedPassword})
    })
+
+   return rest;
 }
 
 module.exports = {
