@@ -6,7 +6,7 @@ const loginInfo = Joi.object({
     email: Joi.string().email().required(),
     password: Joi
         .string()
-        .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,64}$/)
+        .regex(/^(?=.*\p{Ll})(?=.*\p{Lu})(?=.*\d)(?=.*[@$!%*?&])[\p{Ll}\p{Lu}\d@$!%*?&]{8,64}$/u)
         .required()
         .label('Minimum eight and maximum 64 characters, at least one uppercase letter, one lowercase letter, one number and one special character')
 })
