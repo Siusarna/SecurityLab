@@ -2,6 +2,7 @@
 
 const { Joi } = require('celebrate');
 const { DatabaseValidationError, DatabaseSaveError } = require('../exceptions/index');
+const config = require('../config');
 const humps = require('humps');
 
 const validateSchema = (schema, data) => {
@@ -21,12 +22,18 @@ const createSchema = Joi.object({
     email: Joi.string().lowercase().required(),
     password: Joi.string().required(),
     iv: Joi.string().required(),
+    passwordVersion: Joi.string().required()
 });
 
 const create = async (trx, data) => {
-    validateSchema(createSchema, data);
+    const inputData = {
+        ...data,
+        passwordVersion: config.passwordVersions
+    }
+
+    validateSchema(createSchema, inputData);
     const results = await trx
-        .insert(humps.decamelizeKeys(data))
+        .insert(humps.decamelizeKeys(inputData))
         .into(table)
         .returning('*')
         .catch(e => {
