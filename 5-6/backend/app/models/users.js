@@ -18,11 +18,19 @@ const validateSchema = (schema, data) => {
 
 const table = 'users';
 
+const encryptedObject = Joi.object({
+    data: Joi.string().required(),
+    iv: Joi.string().required(),
+    tag: Joi.string().required(),
+})
+
 const createSchema = Joi.object({
     email: Joi.string().lowercase().required(),
     password: Joi.string().required(),
     iv: Joi.string().required(),
-    passwordVersion: Joi.string().required()
+    passwordVersion: Joi.string().required(),
+    address: encryptedObject,
+    phone: encryptedObject
 });
 
 const create = async (trx, data) => {
@@ -30,7 +38,6 @@ const create = async (trx, data) => {
         ...data,
         passwordVersion: config.passwordVersions
     }
-
     validateSchema(createSchema, inputData);
     const results = await trx
         .insert(humps.decamelizeKeys(inputData))
@@ -48,7 +55,7 @@ const create = async (trx, data) => {
 
 const selectByEmail = async (trx, data) => {
     const results = await trx
-        .select(['id', 'email', 'password', 'iv', 'created_at'])
+        .select(['id', 'email', 'password', 'iv', 'address', 'phone', 'created_at'])
         .from(table)
         .where({ email: data.email })
     return humps.camelizeKeys(results[0]);

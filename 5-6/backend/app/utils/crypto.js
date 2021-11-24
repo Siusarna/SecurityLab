@@ -7,17 +7,36 @@ const config = require('../config');
 
 const promisifiedRandomFill = promisify(crypto.randomFill);
 
-const encrypt = async (data, key) => {
+const encryptPassword = async (data, key) => {
     const iv = await promisifiedRandomFill(new Uint8Array(16));
-    const aes = crypto.createCipheriv(config.cipherName, key, iv);
+    const aes = crypto.createCipheriv(config.cipherPasswordName, key, iv);
     let encrypted = aes.update(data, 'utf8', 'hex');
     encrypted += aes.final('hex');
 
-    return { encrypted, iv };
+    return { encrypted, iv: iv.toString() };
+}
+ 
+const encryptData = async (data, key) => {
+    const iv = await promisifiedRandomFill(new Uint8Array(16));
+    const aes = crypto.createCipheriv(config.cipherDataName, key, iv);
+    let encrypted = aes.update(data, 'utf8', 'hex');
+    encrypted += aes.final('hex');
+    const tag = aes.getAuthTag();
+
+    return { encrypted, iv: iv.toString(), tag: tag.toString('base64') };
 }
 
-const decrypt = async (data, key, iv) => {
-    const aes = crypto.createDecipheriv(config.cipherName, key, iv);
+const decryptData = (data, key, iv, tag) => {
+    const aes = crypto.createDecipheriv(config.cipherDataName, key, iv);
+    aes.setAuthTag(tag);
+    let decrypted = aes.update(data, 'hex', 'utf-8');
+    decrypted += aes.final('utf-8');
+
+    return decrypted;
+}
+
+const decryptPassword = (data, key, iv) => {
+    const aes = crypto.createDecipheriv(config.cipherPasswordName, key, iv);
     let decrypted = aes.update(data, 'hex', 'utf-8');
     decrypted += aes.final('utf-8');
 
@@ -32,7 +51,9 @@ const hashing = (data) => argon2.hash(data, {
 });
 
 module.exports = {
-    encrypt,
+    encryptPassword,
     hashing,
-    decrypt
+    decryptPassword,
+    encryptData,
+    decryptData
 }
