@@ -25,6 +25,9 @@ const signIn = async ({email, password}) => {
     if (!(await argon2.verify(decryptedPassword, password))) {
         throw new BadRequest('Login failed; Invalid email or password.');
     }
+    await knex.transaction(trx => {
+        return userModels.updateLastAuthDate(trx, storedUser.id);
+    })
     return {
         message: 'You are successfully login',
         address: decryptedAddress,

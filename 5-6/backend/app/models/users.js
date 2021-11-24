@@ -61,7 +61,16 @@ const selectByEmail = async (trx, data) => {
     return humps.camelizeKeys(results[0]);
 }
 
+const updateLastAuthDate = async (trx, id) => {
+    return trx
+        .update(humps.decamelizeKeys({ lastAuthDate: new Date() }))
+        .into(table)
+        .where({ id })
+        .returning('*');
+}
+
 module.exports = {
     create,
-    selectByEmail
+    selectByEmail,
+    updateLastAuthDate
 }
