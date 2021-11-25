@@ -43,7 +43,7 @@ const signUp = async ({email, password, address, phone}) => {
     const {encrypted: encryptedPassword, iv} = await encryptPassword(hashedPassword, passwordKey);
     const encryptedAddress = await encryptData(address, dataKey);
     const encryptedPhone = await encryptData(phone, dataKey);
-    const {password: storedPassword, iv: storedIv, ...rest} = await knex.transaction(trx => {
+    const {password: storedPassword, iv: storedIv, ...storedUser} = await knex.transaction(trx => {
         return userModels.create(trx, {
             email,
             iv,
@@ -62,7 +62,11 @@ const signUp = async ({email, password, address, phone}) => {
         })
     })
 
-    return rest;
+    return {
+        ...storedUser,
+        address,
+        phone
+    };
 }
 
 module.exports = {
