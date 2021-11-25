@@ -29,10 +29,11 @@ const signIn = async ({email, password}) => {
         return userModels.updateLastAuthDate(trx, storedUser.id);
     })
     return {
-        message: 'You are successfully login',
-        address: decryptedAddress,
-        phone: decryptedPhone,
-        user
+        user: {
+            ...user,
+            address: decryptedAddress,
+            phone: decryptedPhone,
+        }
     };
 };
 

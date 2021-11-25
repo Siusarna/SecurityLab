@@ -55,7 +55,7 @@ const create = async (trx, data) => {
 
 const selectByEmail = async (trx, data) => {
     const results = await trx
-        .select(['id', 'email', 'password', 'iv', 'address', 'phone', 'created_at'])
+        .select(['id', 'email', 'password', 'iv', 'address', 'phone', 'created_at', 'lastAuthDate'])
         .from(table)
         .where({ email: data.email })
     return humps.camelizeKeys(results[0]);
