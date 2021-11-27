@@ -23,7 +23,7 @@ class DatabaseValidationError extends BaseError {
 }
 
 class DatabaseSaveError extends BaseError {
-    constructor(message, status = 418, details = {}) {
+    constructor(message, status = 409, details = {}) {
         super(message, status, details);
     }
 }
