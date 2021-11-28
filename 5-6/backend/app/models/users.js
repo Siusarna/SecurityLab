@@ -46,7 +46,7 @@ const create = async (trx, data) => {
         .catch(e => {
             if (e.constraint === 'users_email_key') {
                 const { password, ...rest } = data;
-                throw new DatabaseSaveError('User with this email has already exists', 422, rest);
+                throw new DatabaseSaveError('User with this email has already exists', undefined, rest);
             }
             throw e;
         });
