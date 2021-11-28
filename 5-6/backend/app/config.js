@@ -14,5 +14,6 @@ module.exports = {
         accessKey: process.env.ACCESS_KEY,
         secretAccessKey: process.env.SECRET_ACCESS_KEY,
         cmkIdentifier: process.env.CMK_IDENTIFIER,
-    }
+    },
+    certPassphrase: process.env.CERT_PASSPHARASE,
 }
