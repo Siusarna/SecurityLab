@@ -9,7 +9,8 @@ const fs = require('fs');
 https.createServer({
     key: fs.readFileSync(`${__dirname}/../certs/localhost.key`),
     cert: fs.readFileSync(`${__dirname}/../certs/localhost.crt`),
-    passphrase: certPassphrase
+    passphrase: certPassphrase,
+    minVersion: 'TLSv1.3'
 }, app).listen(port, () => {
     console.log(`Listening on port ${port}`);
 })
