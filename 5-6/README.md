@@ -121,12 +121,12 @@
       - 'TLS_CHACHA20_POLY1305_SHA256'
       - 'TLS_AES_128_GCM_SHA256'
       
-   [За словами словами](https://nodejs.org/api/tls.html#:~:text=The%20first%203%20are%20enabled%20by%20default.%20The%20last%202%20CCM%2Dbased%20suites%20are%20supported%20by%20TLSv1.3%20because%20they%20may%20be%20more%20performant%20on%20constrained%20systems%2C%20but%20they%20are%20not%20enabled%20by%20default%20since%20they%20offer%20less%20security.) 
+   [За словами](https://nodejs.org/api/tls.html#:~:text=The%20first%203%20are%20enabled%20by%20default.%20The%20last%202%20CCM%2Dbased%20suites%20are%20supported%20by%20TLSv1.3%20because%20they%20may%20be%20more%20performant%20on%20constrained%20systems%2C%20but%20they%20are%20not%20enabled%20by%20default%20since%20they%20offer%20less%20security.) 
    розробників NodeJs, алгоритми на основі CCM були залишені в протоколі, 
    тому що вони можуть бути більш продуктивними в системах із обмеженими можливостями,
    проте не використовуються за замовчанням, бо пропонують менший рівень безпеки.
    
-   В принципі хто я такий, що сперичатися із ними :)
+   В принципі хто я такий, щоб сперичатися із ними :)
 
 2. Where does every component (keys, certificates) reside on your server
    
