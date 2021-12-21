@@ -12,6 +12,7 @@ const { generateHumanLikePassword } = require('./humanLikePassword');
 
 const generateBunchOfPasswords = (numberOfPasswords = 100_000, options) => {
     if (!options || !options.fullyRandom || !options.humanLike || !options.top100 || !options.top10Millions) {
+        options = {}
         options.fullyRandom = randomInt(1, 6);
         options.top10Millions = randomInt(50, 81);
         options.top100 = randomInt(5, 11);
@@ -34,3 +35,22 @@ const generateBunchOfPasswords = (numberOfPasswords = 100_000, options) => {
 
     return passwords;
 }
+
+const createBunchOfHashesByMd5 = () => {
+    const bunchOfPassword = generateBunchOfPasswords();
+    const hashes = bunchOfPassword.map(password => {
+        return md5(password)
+    })
+    fs.writeFileSync('weak.csv', hashes.join('\n'));
+}
+
+const createBunchOfHashesByArgon2 = async () => {
+    const bunchOfPassword = generateBunchOfPasswords();
+    const hashes = await Promise.all(bunchOfPassword.map(password => {
+        return argon2.hash(password)
+    }))
+    fs.writeFileSync('strong.csv', hashes.join('\n'));
+}
+
+// createBunchOfHashesByMd5();
+// createBunchOfHashesByArgon2()
