@@ -16,22 +16,18 @@ const generateHumanLikePassword = () => {
     for (let i = 0; i < numberOfWords; i++) {
         const indexOfWordType = randomInt(0, words.length);
         const indexOfWord = randomInt(0, words[indexOfWordType].length);
-        const word = words[indexOfWordType][indexOfWord];
+        let word = words[indexOfWordType][indexOfWord];
         const shouldAddNumber = randomInt(0, 2);
         if (shouldAddNumber) {
             const shouldAddBeforeTheWord = randomInt(0, 2);
             const number = randomInt(0, 2021);
             if (shouldAddBeforeTheWord) {
-                password.push(number)
-                password.push(word)
+                word = number + word;
             } else {
-                password.push(word)
-                password.push(number)
+                word = word + number
             }
-        } else {
-            password.push(word)
         }
-
+        password.push(word);
     }
 
     return password.join('');
